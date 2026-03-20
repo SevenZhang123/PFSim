@@ -1,3 +1,3 @@
 model link: https://drive.google.com/drive/folders/1JpuzbHxgzIOY4eHQgGe_K7hHa4XiEcIE?usp=drive_link
 
-(include DStack_Tokenizer and DStack_BERT)
+(include DStack_Tokenizer and DStack_BERT!)

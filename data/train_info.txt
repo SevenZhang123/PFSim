@@ -15,7 +15,7 @@
 87.230.62.170	465	service_name=SMTP&banner=220 vwp0675.webpack.hosteurope.de ESMTP Host Europe Mail Service Mon, 14 Apr 2025 04:07:06 +0200 &tls_version=TLSv1_3&tls_cipher=TLS_CHACHA20_POLY1305_SHA256
 87.230.62.170	587	service_name=SMTP&banner=220 vwp0675.webpack.hosteurope.de ESMTP Host Europe Mail Service Mon, 14 Apr 2025 11:56:53 +0200 &tls_version=TLSv1_3&tls_cipher=TLS_CHACHA20_POLY1305_SHA256
 87.230.62.170	993	service_name=IMAP&banner=* OK [CAPABILITY IMAP4rev1 SASL-IR LOGIN-REFERRALS ID ENABLE IDLE LITERAL+ AUTH=PLAIN] Dovecot (Debian) ready. &software=Dovecot Dovecot ,Debian Linux &tls_version=TLSv1_3&tls_cipher=TLS_AES_256_GCM_SHA384
-87.230.62.170	3306	service_name=MYSQL&software=Oracle MySQL ,linux 
+87.230.62.170	3306	service_name=MYSQL&software=Oracle MySQL,linux 
 87.230.62.170	4040	service_name=SSH&banner=SSH-2.0-OpenSSH_9.9&software=OpenBSD OpenSSH 9.9
 31.170.167.2	3306	service_name=MYSQL&banner=5.5.5-10.11.11-MariaDB&software=MariaDB MariaDB 10.11.11&tls_version=TLSv1_2&tls_cipher=TLS_RSA_WITH_AES_128_GCM_SHA256
 31.170.167.2	65002	service_name=SSH&banner=SSH-2.0-OpenSSH_7.4&software=OpenBSD OpenSSH 7.4

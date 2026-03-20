@@ -29,7 +29,7 @@ This part includes two steps: **_step2-1_**: constructing training sample pairs 
 
 ### Step2-1 Constructing Training Sample Pairs Based on Data Augmentation
 We're constructing training sample pairs based on service information corpus.
-Please replace our corpus ("train_info_month4.txt") with your corpus and run the fellowing code:
+Please replace our corpus ("train_info_month4.txt") with your corpus and run the following code:
 ```
 cd code
  python data_augment.py 

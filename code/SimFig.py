@@ -1,4 +1,3 @@
-# 端口指纹相似性计算
 import torch
 import numpy as np
 from transformers import AutoTokenizer, AutoModel, BertModel
@@ -11,7 +10,6 @@ from sklearn.metrics import f1_score
 from tqdm import tqdm
 
 
-# === 加载扩展后的 Tokenizer 和 训练好的模型 ===
 tokenizer = AutoTokenizer.from_pretrained("../model/expended_tokenizer")
 # tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("../model")
@@ -21,7 +19,6 @@ model.eval()
 
 
 
-# === 服务信息编码函数 ===
 def get_embedding(text):
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding="max_length", max_length=128)
     with torch.no_grad():
@@ -30,29 +27,24 @@ def get_embedding(text):
     return embedding.squeeze(0)  # [hidden_size]
 
 
-# === 欧几里得距离 ===
 def euclidean_distance(vec1, vec2):
     return torch.norm(vec1 - vec2, p=2).item()
 
 
-# === Jaccard 相似性 ===
 def jaccard_similarity(set1, set2):
     intersection = len(set1 & set2)
     union = len(set1 | set2)
     return intersection / union if union != 0 else 0.0
 
 
-# === 主函数：判断是否同主机 ===
 def is_same_host(ipv4_fp: dict, ipv6_fp: dict, label: int, threshold: float = 0.05) -> int:
     ports4 = set(ipv4_fp.keys())
     ports6 = set(ipv6_fp.keys())
     common_ports = ports4 & ports6
 
-    # Step 1: 计算 Jaccard 相似度及惩罚项
     jaccard = jaccard_similarity(ports4, ports6)
     penalty = math.log(1 + 1 / (jaccard + 0.001))
 
-    # Step 2: 对每个共同端口，计算服务嵌入距离
     distances = []
     for port in common_ports:
         emb4 = get_embedding(ipv4_fp[port])
@@ -63,11 +55,9 @@ def is_same_host(ipv4_fp: dict, ipv6_fp: dict, label: int, threshold: float = 0.
     avg_dist = np.mean(distances)
     score = avg_dist * penalty
 
-    # Step 3: 判断是否小于阈值
     return 1 if score <= threshold else 0
 
 
-# === 示例数据 ===
 f_ground = open("../data/test.txt", "r", encoding="utf-8") # Test dataset
 f_service = open("../data/test_info.txt", "r", encoding="utf-8") # D_4
 ip_fingerprint = defaultdict(dict)

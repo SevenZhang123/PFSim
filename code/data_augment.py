@@ -1,10 +1,7 @@
-# 1. 基于train_info_month4.txt进行数据增强，构建正负样本对，用于后续对SBERT模型的训练
-
 import random
 import re
 from tqdm import tqdm
 
-# 抽取字段列表
 service_names = set()
 tls_ciphers = set()
 tls_versions = {"TLSv1_1", "TLSv1_2", "TLSv1_3"}
@@ -107,11 +104,9 @@ def create_pair(original_line, modified_info, label):
     # modified_line = f"{ip}\t{port}\t{modified_info}"
     return f"{original_info}\t{modified_info}\t{label}"
 
-# 读取原始数据
 with open('../data/train_info.txt', 'r', encoding='utf-8') as f:
     raw_data = [line.strip() for line in f if line.strip()]
 
-# 预处理，收集所有候选字段
 for line in raw_data:
     parts = line.split("\t")
     if len(parts) != 3:
@@ -134,7 +129,7 @@ for line in raw_data:
                 version_list.add(parts[2])
 
 
-# 1. service_name 替换（负样本）
+# 1. service_name replacement
 print("service_name replace start!")
 for line in random.sample(raw_data, 40000):
     # print(line)
@@ -147,7 +142,7 @@ for line in random.sample(raw_data, 40000):
         new_info = fields_to_string(fields)
         negative_pairs.append(create_pair(line, new_info, 1))
 
-# 2. banner 模糊化（正样本）
+# 2. banner obfuscation
 print("banner modify start!")
 for line in random.sample([l for l in raw_data if "banner=" in l], 80000):
     # print(line)
@@ -158,7 +153,7 @@ for line in random.sample([l for l in raw_data if "banner=" in l], 80000):
         new_info = fields_to_string(fields)
         positive_pairs.append(create_pair(line, new_info, 0))
 
-# 3. software 字段替换（负样本）
+# 3. software replacement
 print("software replace start!")
 for line in random.sample([l for l in raw_data if "software=" in l], 40000):
     ip, port, service_info = line.split("\t")
@@ -167,7 +162,7 @@ for line in random.sample([l for l in raw_data if "software=" in l], 40000):
     new_info = fields_to_string(fields)
     negative_pairs.append(create_pair(line, new_info, 1))
 
-# 4. tls_version 替换（负样本）
+# 4. tls_version replacement
 print("tls_version replace start!")
 for line in random.sample([l for l in raw_data if "tls_version=" in l], 40000):
     ip, port, service_info = line.split("\t")
@@ -178,7 +173,7 @@ for line in random.sample([l for l in raw_data if "tls_version=" in l], 40000):
     new_info = fields_to_string(fields)
     negative_pairs.append(create_pair(line, new_info, 1))
 
-# 5. tls_cipher 替换（负样本）
+# 5. tls_cipher replacement
 print("tls_cipher replace start!")
 for line in random.sample([l for l in raw_data if "tls_cipher=" in l], 40000):
     ip, port, service_info = line.split("\t")
@@ -189,7 +184,7 @@ for line in random.sample([l for l in raw_data if "tls_cipher=" in l], 40000):
     new_info = fields_to_string(fields)
     negative_pairs.append(create_pair(line, new_info, 1))
 
-# 6. 字段删除或模糊化（正样本）
+# 6. field deletion or obfuscation
 print("field delete start!")
 for line in random.sample(raw_data, 80000):
     ip, port, service_info = line.split("\t")
@@ -207,12 +202,10 @@ with open('../data/augmented_data.txt', 'w', encoding='utf-8') as f:
         f.write(pair + "\n")
 
 
-# 2. 清洗augmented_data.txt中的数据，仅保留ASCII可打印字符
 f_data = open("../data/augmented_data.txt", "r", encoding="utf-8")
 f_clean = open("../data/augmented_data_clean.txt", "w", encoding="utf-8")
 
 def clean_to_printable_ascii(text: str) -> str:
-    # 保留ASCII范围内32~126的字符
     return ''.join(c for c in text if 32 <= ord(c) <= 126)
 
 for line in f_data:
