@@ -1,4 +1,4 @@
-# 构建领域特定的编码器DStack-BERT
+# Building a domain-specific encoder DStack-BERT
 
 import torch
 from torch import nn
@@ -7,11 +7,11 @@ from transformers import BertModel, BertTokenizerFast, AdamW
 from tqdm import tqdm
 import os
 
-# 1. 加载扩展好的分词器，采用预训练好的bert-base-uncased模型
+# 1. Load the expanded word segmenter and use the pre-trained bert-base-uncased model.
 tokenizer = BertTokenizerFast.from_pretrained("../data/expended_tokenizer")
 base_model = "bert-base-uncased"
 
-# 2. 自定义数据集
+# 2. Custom dataset
 class SentencePairDataset(Dataset):
     def __init__(self, file_path, tokenizer, max_length=128):
         self.samples = []
@@ -34,7 +34,7 @@ class SentencePairDataset(Dataset):
         encoded2 = self.tokenizer(text2, padding='max_length', truncation=True, max_length=self.max_length, return_tensors='pt')
         return encoded1, encoded2, torch.tensor(label, dtype=torch.float)
 
-# 3. 自定义 Sentence-BERT 模型
+# 3. Custom Sentence-BERT Model
 class SentenceBERT(nn.Module):
     def __init__(self, model_name):
         super(SentenceBERT, self).__init__()
@@ -58,11 +58,11 @@ class ContrastiveLoss(nn.Module):
                label * 0.5 * torch.pow(torch.clamp(self.margin - distance, min=0.0), 2)
         return loss.mean()
 
-# 5. 准备训练
+# 5. Preparing for training
 file_path = "../data/augmented_data_clean.txt"
 dataset = SentencePairDataset(file_path, tokenizer)
 
-# 划分训练集和验证集
+# Divide the training set and validation set
 train_size = int(0.8 * len(dataset))
 val_size = len(dataset) - train_size
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
@@ -70,13 +70,13 @@ train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 
-# 初始化模型和优化器
+# Initialize the model and optimizer
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = SentenceBERT(model_name=base_model).to(device)
 criterion = ContrastiveLoss(margin=1.0)
 optimizer = AdamW(model.parameters(), lr=2e-5)
 
-# 6. Early stopping 配置
+# 6. Early stopping configuration
 epochs = 10
 best_acc = 0
 patience = 2
@@ -84,7 +84,7 @@ counter = 0
 save_path = "../model"
 os.makedirs(save_path, exist_ok=True)
 
-# 准确率计算函数
+# Accuracy calculation function
 def evaluate(model, val_loader):
     model.eval()
     correct = 0
@@ -106,7 +106,7 @@ def evaluate(model, val_loader):
             total += labels.size(0)
     return correct / total
 
-# 7. 训练循环
+# 7. Training loop
 for epoch in range(epochs):
     model.train()
     total_loss = 0

@@ -30,10 +30,8 @@ def modify_banner(banner):
         return banner
     for _ in range(random.randint(1, min(len(words), 3))):
         if len(words) == 1:
-            # print("enter")
             idx = 0
         else:
-            # print("enter111")
             idx = random.randint(0, len(words) - 1)
         op = random.choice(["delete", "replace", "char_delete", "char_replace"])
         if op == "delete":

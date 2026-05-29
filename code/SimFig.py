@@ -59,7 +59,7 @@ def is_same_host(ipv4_fp: dict, ipv6_fp: dict, label: int, threshold: float = 0.
 
 
 f_ground = open("../data/test.txt", "r", encoding="utf-8") # Test dataset
-f_service = open("../data/test_info.txt", "r", encoding="utf-8") # D_4
+f_service = open("../data/test_info.txt", "r", encoding="utf-8")
 ip_fingerprint = defaultdict(dict)
 sample_pairs_list = []
 

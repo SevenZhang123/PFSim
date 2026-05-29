@@ -1,4 +1,4 @@
-f_data = open("../data/train_info.txt", "r", encoding="utf-8") # D_T
+f_data = open("../data/train_info.txt", "r", encoding="utf-8")
 f_corpus = open("../data/fine-tuning_corpus.txt", "w", encoding="utf-8")
 
 for line in f_data:
