@@ -101,7 +101,7 @@ def evaluate(model, val_loader):
             emb2 = model(input_ids2, attention_mask2)
 
             distances = torch.norm(emb1 - emb2, dim=1)
-            preds = (distances > 0.5).float()  # 距离小认为相似（标签0）
+            preds = (distances > 0.5).float()  # Those with small distances are considered similar (label 0)
             correct += (preds == labels).sum().item()
             total += labels.size(0)
     return correct / total
