@@ -52,6 +52,6 @@ cd code
  python SimFig.py 
 ```
 
-[!IMPORTANT]
-Due to our data usage agreement with Censys, we are unable to provide our detection results for each target IP, such as port open status and service information.
-We recommend that users first apply for data access permissions from Censys or other institutions, and then use our method after obtaining relevant data.
+> [!IMPORTANT]
+> Due to our data usage agreement with Censys, we are unable to provide our detection results for each target IP, such as port open status and service information.
+> We recommend that users first apply for data access permissions from Censys or other institutions, and then use our method after obtaining relevant data.
